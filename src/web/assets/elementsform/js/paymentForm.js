@@ -5,7 +5,9 @@ class PaymentIntentsElements {
     this.stripeInstance = Stripe(publishableKey);
     this.elements = null;
     this.scenario = this.container.dataset.clientScenario;
-    this.completeActionUrl = this.container.dataset.completePaymentActionUrl;
+    this.completePaymentActionUrl = this.container.dataset.completePaymentActionUrl;
+    this.completeSubscriptionActionUrl = this.container.dataset.completeSubscriptionActionUrl;
+    this.subscription = this.container.dataset.subscription;
     this.processingButtonText = this.container.dataset.processingButtonText;
     this.hiddenClass = this.container.dataset.hiddenClass;
     this.$submitButton = this.container.querySelector(
@@ -57,20 +59,22 @@ class PaymentIntentsElements {
   }
 
   async requiresActionFlow() {
-    const options = {
-      clientSecret: this.container.dataset.clientSecret,
-      appearance: JSON.parse(this.container.dataset.appearance),
-    };
+    const completeSubscriptionActionUrl = new URL(this.completeSubscriptionActionUrl);
+    completeSubscriptionActionUrl.searchParams.append(
+      'subscription',
+      this.subscription
+    );
+    this.completeSubscriptionActionUrl = completeSubscriptionActionUrl.toString();
 
-    this.createStripeElementsForm(options);
-
-    const elements = this.elements;
     const {error} = await this.stripeInstance.confirmPayment({
-      elements,
+      clientSecret: this.container.dataset.clientSecret,
       confirmParams: {
-        return_url: this.completeActionUrl,
+        return_url: this.completeSubscriptionActionUrl,
       },
     });
+
+    this.showErrorMessage(error.message);
+    this.$submitButton.classList.add(this.hiddenClass);
   }
 
   deprecatedSubscribeFlow() {
@@ -193,16 +197,16 @@ class PaymentIntentsElements {
           return;
         }
 
-        const completeActionUrl = new URL(this.completeActionUrl);
-        completeActionUrl.searchParams.append(
+        const completePaymentActionUrl = new URL(this.completePaymentActionUrl);
+        completePaymentActionUrl.searchParams.append(
           'commerceTransactionHash',
           json.transactionHash
         );
-        completeActionUrl.searchParams.append(
+        completePaymentActionUrl.searchParams.append(
           'commerceTransactionId',
           json.transactionId
         );
-        this.completeActionUrl = completeActionUrl.toString();
+        this.completePaymentActionUrl = completePaymentActionUrl.toString();
 
         const options = {
           clientSecret: json.redirectData.client_secret,
@@ -277,7 +281,7 @@ class PaymentIntentsElements {
           const {error} = await this.stripeInstance.confirmPayment({
             elements,
             confirmParams: {
-              return_url: this.completeActionUrl,
+              return_url: this.completePaymentActionUrl,
             },
           });
           this.$submitButton.innerText = submitText;
@@ -301,7 +305,7 @@ class PaymentIntentsElements {
     }
 
     if (this.scenario === 'requires_action') {
-      this.requiresActionFlow();
+        this.requiresActionFlow();
     }
   }
 }
