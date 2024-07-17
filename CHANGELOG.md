@@ -1,6 +1,6 @@
 # Release Notes for Stripe for Craft Commerce
 
-## Unreleased
+## 4.1.3 - 2024-07-17
 
 - Stripe for Craft Commerce now requires Craft Commerce 4.6.4 or later.
 - Fixed a bug where SCA payment sources prevented subscriptions from starting. ([#304](https://github.com/craftcms/commerce-stripe/pull/304))
