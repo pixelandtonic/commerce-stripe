@@ -5,6 +5,7 @@
 <div class="stripe-payment-elements-form hidden"
      data-publishablekey="{{ gateway.getPublishableKey() }}"
      data-complete-payment-action-url="{{ actionUrl('commerce/payments/complete-payment') }}"
+     data-complete-subscription-action-url="{{ actionUrl('commerce/subscriptions/complete-subscription') }}"
      data-confirm-setup-intent-url="{{ actionUrl('commerce-stripe/customers/confirm-setup-intent') }}"
      data-payment-form-namespace="{{ handle|commercePaymentFormNamespace }}"
      data-gateway-id="{{ gateway.id }}"
@@ -14,6 +15,7 @@
      data-client-scenario="{{ scenario }}"
      data-processing-button-text="{{ processingButtonText }}"
      data-hidden-class="{{ hiddenClass }}"
+     data-subscription="{{ subscription }}"
 >
     <div class="hidden stripe-error-message {{ errorMessageClasses }}">
         {# Error messages are displayed to your customers, here. #}
