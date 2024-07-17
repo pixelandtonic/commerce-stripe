@@ -5,8 +5,10 @@ class PaymentIntentsElements {
     this.stripeInstance = Stripe(publishableKey);
     this.elements = null;
     this.scenario = this.container.dataset.clientScenario;
-    this.completePaymentActionUrl = this.container.dataset.completePaymentActionUrl;
-    this.completeSubscriptionActionUrl = this.container.dataset.completeSubscriptionActionUrl;
+    this.completePaymentActionUrl =
+      this.container.dataset.completePaymentActionUrl;
+    this.completeSubscriptionActionUrl =
+      this.container.dataset.completeSubscriptionActionUrl;
     this.subscription = this.container.dataset.subscription;
     this.processingButtonText = this.container.dataset.processingButtonText;
     this.hiddenClass = this.container.dataset.hiddenClass;
@@ -59,12 +61,15 @@ class PaymentIntentsElements {
   }
 
   async requiresActionFlow() {
-    const completeSubscriptionActionUrl = new URL(this.completeSubscriptionActionUrl);
+    const completeSubscriptionActionUrl = new URL(
+      this.completeSubscriptionActionUrl
+    );
     completeSubscriptionActionUrl.searchParams.append(
       'subscription',
       this.subscription
     );
-    this.completeSubscriptionActionUrl = completeSubscriptionActionUrl.toString();
+    this.completeSubscriptionActionUrl =
+      completeSubscriptionActionUrl.toString();
 
     const {error} = await this.stripeInstance.confirmPayment({
       clientSecret: this.container.dataset.clientSecret,
@@ -305,7 +310,7 @@ class PaymentIntentsElements {
     }
 
     if (this.scenario === 'requires_action') {
-        this.requiresActionFlow();
+      this.requiresActionFlow();
     }
   }
 }
