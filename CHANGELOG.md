@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Fixed a bug where SCA payment sources prevented a subscription from starting. ([#304](https://github.com/craftcms/commerce-stripe/pull/304))
+- Fixed a bug where SCA payment sources prevented subscriptions from starting. ([#304](https://github.com/craftcms/commerce-stripe/pull/304))
 - Fixed a bug where the `hiddenClass` payment form parameter was not being applied correctly. ([#288](https://github.com/craftcms/commerce-stripe/pull/288))
 
 ## 4.1.2.3 - 2024-06-18
