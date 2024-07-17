@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Stripe for Craft Commerce now requires Craft Commerce 4.6.4 or later.
 - Fixed a bug where SCA payment sources prevented subscriptions from starting. ([#304](https://github.com/craftcms/commerce-stripe/pull/304))
 - Fixed a bug where the `hiddenClass` payment form parameter was not being applied correctly. ([#288](https://github.com/craftcms/commerce-stripe/pull/288))
 
