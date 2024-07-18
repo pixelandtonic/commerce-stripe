@@ -475,8 +475,8 @@ class PaymentIntents extends BaseGateway
             $clientSecret = $intentData['client_secret'];
             switch ($intentData['status']) {
                 case 'requires_payment_method':
+                    return $this->getPaymentFormHtml(['clientSecret' => $clientSecret, 'scenario' => 'requires_payment_method', 'subscription' => $subscription->uid]);
                 case 'requires_confirmation':
-                    return $this->getPaymentFormHtml(['clientSecret' => $clientSecret]);
                 case 'requires_action':
                     return $this->getPaymentFormHtml(['clientSecret' => $clientSecret, 'scenario' => 'requires_action', 'subscription' => $subscription->uid]);
             }

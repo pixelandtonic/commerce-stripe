@@ -82,6 +82,44 @@ class PaymentIntentsElements {
     this.$submitButton.classList.add(this.hiddenClass);
   }
 
+  async requiresPaymentMethodFlow() {
+    this.$submitButton.classList.remove(this.hiddenClass);
+
+    const completeSubscriptionActionUrl = new URL(
+      this.completeSubscriptionActionUrl
+    );
+    completeSubscriptionActionUrl.searchParams.append(
+      'subscription',
+      this.subscription
+    );
+    this.completeSubscriptionActionUrl =
+      completeSubscriptionActionUrl.toString();
+
+    const options = {
+      clientSecret: this.container.dataset.clientSecret,
+      appearance: JSON.parse(this.container.dataset.appearance),
+    };
+
+    this.createStripeElementsForm(options);
+
+    const elements = this.elements;
+
+    this.$submitButton.addEventListener('click', async (event) => {
+      event.preventDefault();
+      this.$submitButton.classList.add(this.hiddenClass);
+      const {error} = await this.stripeInstance.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: this.completeSubscriptionActionUrl,
+        },
+      });
+
+      this.showErrorMessage(error.message);
+      this.$submitButton.classList.remove(this.hiddenClass);
+    });
+
+  }
+
   deprecatedSubscribeFlow() {
     this.showErrorMessage(
       'Can not use the Stripe payment form to subscribe. Please create a payment source first.'
@@ -311,6 +349,10 @@ class PaymentIntentsElements {
 
     if (this.scenario === 'requires_action') {
       this.requiresActionFlow();
+    }
+
+    if (this.scenario === 'requires_payment_method') {
+      this.requiresPaymentMethodFlow();
     }
   }
 }
