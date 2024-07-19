@@ -450,25 +450,26 @@ abstract class Gateway extends BaseGateway
      */
     public function getTransactionHashFromWebhook(): ?string
     {
+        $transactionHash = null;
+
         $rawData = Craft::$app->getRequest()->getRawBody();
-        if (!$rawData) {
-            return null;
-        }
-
         $data = Json::decodeIfJson($rawData);
-        if (!$data) {
-            return null;
-        }
+        
+        if ($data) {
+            $transactionHash = ArrayHelper::getValue($data, 'data.object.metadata.transaction_reference');
+            if (!$transactionHash || !is_string($transactionHash)) {
+                $transactionHash = null;
+            }
 
-        $transactionHash = ArrayHelper::getValue($data, 'data.object.metadata.transaction_reference');
-        if (!$transactionHash || !is_string($transactionHash)) {
-            $transactionHash = null;
-        }
+            if (!$transactionHash) {
+                $transactionHash = ArrayHelper::getValue($data, 'data.object.payment_intent');
+            }
 
-        if (!$transactionHash) {
-            // Use the object ID as the unique ID of the stripe object for the transaction hash so we can enforce a mutex
-            // in \craft\commerce\services\Webhooks::processWebhook() which call this method.
-            $transactionHash = ArrayHelper::getValue($data, 'data.object.id');
+            if (!$transactionHash) {
+                // Use the object ID as the unique ID of the stripe object for the transaction hash so we can enforce a mutex
+                // in \craft\commerce\services\Webhooks::processWebhook() which call this method.
+                $transactionHash = ArrayHelper::getValue($data, 'data.object.id');
+            }
         }
 
         return $transactionHash;

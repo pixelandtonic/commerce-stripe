@@ -5,7 +5,11 @@ class PaymentIntentsElements {
     this.stripeInstance = Stripe(publishableKey);
     this.elements = null;
     this.scenario = this.container.dataset.clientScenario;
-    this.completeActionUrl = this.container.dataset.completePaymentActionUrl;
+    this.completePaymentActionUrl =
+      this.container.dataset.completePaymentActionUrl;
+    this.completeSubscriptionActionUrl =
+      this.container.dataset.completeSubscriptionActionUrl;
+    this.subscription = this.container.dataset.subscription;
     this.processingButtonText = this.container.dataset.processingButtonText;
     this.hiddenClass = this.container.dataset.hiddenClass;
     this.$submitButton = this.container.querySelector(
@@ -53,10 +57,44 @@ class PaymentIntentsElements {
     paymentElement.on('change', layoutChangeHandler);
 
     // Show the container:
-    this.container.classList.remove('hidden');
+    this.container.classList.remove(this.hiddenClass);
   }
 
   async requiresActionFlow() {
+    const completeSubscriptionActionUrl = new URL(
+      this.completeSubscriptionActionUrl
+    );
+    completeSubscriptionActionUrl.searchParams.append(
+      'subscription',
+      this.subscription
+    );
+    this.completeSubscriptionActionUrl =
+      completeSubscriptionActionUrl.toString();
+
+    const {error} = await this.stripeInstance.confirmPayment({
+      clientSecret: this.container.dataset.clientSecret,
+      confirmParams: {
+        return_url: this.completeSubscriptionActionUrl,
+      },
+    });
+
+    this.showErrorMessage(error.message);
+    this.$submitButton.classList.add(this.hiddenClass);
+  }
+
+  async requiresPaymentMethodFlow() {
+    this.$submitButton.classList.remove(this.hiddenClass);
+
+    const completeSubscriptionActionUrl = new URL(
+      this.completeSubscriptionActionUrl
+    );
+    completeSubscriptionActionUrl.searchParams.append(
+      'subscription',
+      this.subscription
+    );
+    this.completeSubscriptionActionUrl =
+      completeSubscriptionActionUrl.toString();
+
     const options = {
       clientSecret: this.container.dataset.clientSecret,
       appearance: JSON.parse(this.container.dataset.appearance),
@@ -65,12 +103,21 @@ class PaymentIntentsElements {
     this.createStripeElementsForm(options);
 
     const elements = this.elements;
-    const {error} = await this.stripeInstance.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: this.completeActionUrl,
-      },
+
+    this.$submitButton.addEventListener('click', async (event) => {
+      event.preventDefault();
+      this.$submitButton.classList.add(this.hiddenClass);
+      const {error} = await this.stripeInstance.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: this.completeSubscriptionActionUrl,
+        },
+      });
+
+      this.showErrorMessage(error.message);
+      this.$submitButton.classList.remove(this.hiddenClass);
     });
+
   }
 
   deprecatedSubscribeFlow() {
@@ -193,16 +240,16 @@ class PaymentIntentsElements {
           return;
         }
 
-        const completeActionUrl = new URL(this.completeActionUrl);
-        completeActionUrl.searchParams.append(
+        const completePaymentActionUrl = new URL(this.completePaymentActionUrl);
+        completePaymentActionUrl.searchParams.append(
           'commerceTransactionHash',
           json.transactionHash
         );
-        completeActionUrl.searchParams.append(
+        completePaymentActionUrl.searchParams.append(
           'commerceTransactionId',
           json.transactionId
         );
-        this.completeActionUrl = completeActionUrl.toString();
+        this.completePaymentActionUrl = completePaymentActionUrl.toString();
 
         const options = {
           clientSecret: json.redirectData.client_secret,
@@ -277,7 +324,7 @@ class PaymentIntentsElements {
           const {error} = await this.stripeInstance.confirmPayment({
             elements,
             confirmParams: {
-              return_url: this.completeActionUrl,
+              return_url: this.completePaymentActionUrl,
             },
           });
           this.$submitButton.innerText = submitText;
@@ -302,6 +349,10 @@ class PaymentIntentsElements {
 
     if (this.scenario === 'requires_action') {
       this.requiresActionFlow();
+    }
+
+    if (this.scenario === 'requires_payment_method') {
+      this.requiresPaymentMethodFlow();
     }
   }
 }

@@ -139,6 +139,7 @@ class PaymentIntents extends BaseGateway
     {
         $defaults = [
             'clientSecret' => '',
+            'subscription' => '',
             'scenario' => 'payment',
             'order' => null,
             'gateway' => $this,
@@ -323,7 +324,7 @@ class PaymentIntents extends BaseGateway
     {
         // Is Craft request the commerce/pay controller action?
         $appRequest = Craft::$app->getRequest();
-        $isCommercePayRequest = $appRequest->getIsSiteRequest() && $appRequest->getIsActionRequest() && $appRequest->getActionSegments() == ['commerce', 'pay', 'index'];
+        $isCommercePayRequest = $appRequest->getIsSiteRequest() && $appRequest->getIsActionRequest() && $appRequest->getActionSegments() == ['commerce', 'payments', 'pay'];
 
         if ($isCommercePayRequest) {
             throw new PaymentSourceCreatedLaterException(Craft::t('commerce', 'The payment source should be created after successful payment.'));
@@ -475,10 +476,10 @@ class PaymentIntents extends BaseGateway
             $clientSecret = $intentData['client_secret'];
             switch ($intentData['status']) {
                 case 'requires_payment_method':
+                    return $this->getPaymentFormHtml(['clientSecret' => $clientSecret, 'scenario' => 'requires_payment_method', 'subscription' => $subscription->uid]);
                 case 'requires_confirmation':
-                    return $this->getPaymentFormHtml(['clientSecret' => $clientSecret]);
                 case 'requires_action':
-                    return $this->getPaymentFormHtml(['clientSecret' => $clientSecret, 'scenario' => 'requires_action']);
+                    return $this->getPaymentFormHtml(['clientSecret' => $clientSecret, 'scenario' => 'requires_action', 'subscription' => $subscription->uid]);
             }
         }
 
