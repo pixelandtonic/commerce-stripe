@@ -330,7 +330,7 @@ Commerce also has a [generic subscription event](https://docs.craftcms.com/comme
 You can now generate a link to the [Stripe billing portal](https://stripe.com/docs/customer-management) for customers to manage their credit cards and plans.
 
 ```twig
-<a href={{ gateway.billingPortalUrl(currentUser) }}">Manage your billing account</a>
+<a href="{{ gateway.billingPortalUrl(currentUser) }}">Manage your billing account</a>
 ```
 
 Pass a `returnUrl` parameter to return the customer to a specific on-site page after they have finished:
