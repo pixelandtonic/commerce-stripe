@@ -1,5 +1,9 @@
 # Release Notes for Stripe for Craft Commerce
 
+## Unreleased
+
+- Fixed a bug where subscriptions that had billing issues did not show a payment form correctly.
+
 ## 4.1.4 - 2024-07-18
 
 - Stripe for Craft Commerce now requires Craft Commerce 4.6.5 or later.
