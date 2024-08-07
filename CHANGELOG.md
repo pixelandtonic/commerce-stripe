@@ -6,6 +6,7 @@
 - Fixed a bug where the `hiddenClass` payment form parameter was not being applied correctly. ([#288](https://github.com/craftcms/commerce-stripe/pull/288))
 - Fixed a SQL performance issue that occurred when upgrading. ([#190](https://github.com/craftcms/commerce-stripe/issues/190))
 - Fixed a bug the billing issues payment form did not display correctly for subscriptions.
+- Fixed a bug where the first payment source created was not set as the default.
 
 ## 5.0.1 - 2024-04-09
 
