@@ -1,8 +1,8 @@
 # Release Notes for Stripe for Craft Commerce
 
-## Unreleased
+## 4.1.5 - 2024-08-07
 
-- Fixed a bug where subscriptions that had billing issues did not show a payment form correctly.
+- Fixed a bug the billing issues payment form did not display correctly for subscriptions.
 
 ## 4.1.4 - 2024-07-18
 
