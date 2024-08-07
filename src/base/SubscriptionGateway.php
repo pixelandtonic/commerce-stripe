@@ -524,6 +524,12 @@ abstract class SubscriptionGateway extends Gateway
         $paymentIntent = $data['data']['object'];
         if ($paymentIntent['object'] === 'payment_intent') {
             $transaction = Plugin::getInstance()->getTransactions()->getTransactionByReference($paymentIntent['id']);
+
+            if (!$transaction) {
+                Craft::warning('Transaction with reference “' . $paymentIntent['id'] . '” not found when processing webhook request: ' . Json::encode($data));
+                return;
+            }
+
             $updateTransaction = null;
 
             if ($transaction->parentId === null) {
@@ -753,6 +759,12 @@ abstract class SubscriptionGateway extends Gateway
             $this->getStripeClient()->paymentMethods->attach($stripePaymentMethod['id'], ['customer' => $stripeCustomer->id]);
 
             $result = Plugin::getInstance()->paymentSources->savePaymentSource($paymentSource);
+
+            if ($result) {
+                if (!$user->getPrimaryPaymentSourceId()) {
+                    Plugin::getInstance()->getCustomers()->savePrimaryPaymentSourceId($user, $paymentSource->id);
+                }
+            }
 
             if (!$result) {
                 Craft::error('Could not save payment source: ' . Json::encode($paymentSource->getErrors()), 'commerce-stripe');
