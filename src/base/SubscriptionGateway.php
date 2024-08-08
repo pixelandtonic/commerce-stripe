@@ -946,7 +946,9 @@ abstract class SubscriptionGateway extends Gateway
         $plan = $planService->getPlanByReference($data['data']['object']['id']);
 
         if (!$plan) {
-            throw new InvalidConfigException('Plan with the reference “' . $data['data']['object']['id'] . '” not found when processing webhook ' . $data['id']);
+            // replace throw with log
+            Craft::warning('Plan with the reference “' . $data['data']['object']['id'] . '” not found when processing webhook ' . $data['id'], 'stripe');
+            return;
         }
 
         if ($data['type'] == 'plan.deleted') {
