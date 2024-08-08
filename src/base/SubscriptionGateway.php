@@ -526,7 +526,7 @@ abstract class SubscriptionGateway extends Gateway
             $transaction = Plugin::getInstance()->getTransactions()->getTransactionByReference($paymentIntent['id']);
 
             if (!$transaction) {
-                Craft::warning('Transaction with reference “' . $paymentIntent['id'] . '” not found when processing webhook request: ' . Json::encode($data));
+                Craft::warning('Transaction with the reference “' . $paymentIntent['id'] . '” not found when processing webhook ' . $data['id'], 'stripe');
                 return;
             }
 
