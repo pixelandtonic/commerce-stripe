@@ -525,7 +525,7 @@ abstract class SubscriptionGateway extends Gateway
         if ($paymentIntent['object'] === 'payment_intent') {
             $transaction = Plugin::getInstance()->getTransactions()->getTransactionByReference($paymentIntent['id']);
 
-            if (!$transaction) {
+            if ($transaction?->id) {
                 Craft::warning('Transaction with the reference “' . $paymentIntent['id'] . '” not found when processing webhook ' . $data['id'], 'stripe');
                 return;
             }
@@ -761,6 +761,7 @@ abstract class SubscriptionGateway extends Gateway
             $result = Plugin::getInstance()->paymentSources->savePaymentSource($paymentSource);
 
             if ($result) {
+                /** @phpstan-ignore-next-line */
                 if (!$user->getPrimaryPaymentSourceId()) {
                     Plugin::getInstance()->getCustomers()->savePrimaryPaymentSourceId($user, $paymentSource->id);
                 }
