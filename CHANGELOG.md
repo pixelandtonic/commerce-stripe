@@ -1,5 +1,9 @@
 # Release Notes for Stripe for Craft Commerce
 
+## 5.0.3 - 2024-08-08
+
+- Fixed a PHP error that occurred when receiving webhook events for plans that are not configured in Craft Commerce.
+
 ## 5.0.2 - 2024-08-07
 
 - Fixed a bug where SCA payment sources prevented subscriptions from starting. ([#304](https://github.com/craftcms/commerce-stripe/pull/304))
