@@ -117,7 +117,6 @@ class PaymentIntentsElements {
       this.showErrorMessage(error.message);
       this.$submitButton.classList.remove(this.hiddenClass);
     });
-
   }
 
   deprecatedSubscribeFlow() {
