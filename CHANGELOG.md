@@ -1,8 +1,8 @@
 # Release Notes for Stripe for Craft Commerce
 
-## Unreleased
+## 5.0.4.1 - 2024-08-09
  
-- Fixed a bug where webhooks weren’t being handled even when a transaction was found. ([#308](https://github.com/craftcms/commerce-stripe/pull/308))
+- Fixed a bug where webhooks weren’t being handled correctly when an associated transaction was found. ([#308](https://github.com/craftcms/commerce-stripe/pull/308))
 
 ## 5.0.4 - 2024-08-08
 
