@@ -1,6 +1,6 @@
 # Release Notes for Stripe for Craft Commerce
 
-## Unreleased
+## 5.0.4.2 - 2024-08-12
 
 - Fixed a PHP error that occurred when receiving webhook events for subscriptions that did not originate from Craft Commerce. ([#309](https://github.com/craftcms/commerce-stripe/pull/309))
 
