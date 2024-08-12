@@ -921,7 +921,9 @@ abstract class SubscriptionGateway extends Gateway
 
 
         if (!$subscription) {
-            throw new SubscriptionException('Subscription with the reference “' . $subscriptionReference . '” not found when processing webhook ' . $data['id']);
+            // replace throw with log
+            Craft::warning('Subscription with the reference “' . $subscriptionReference . '” not found when processing webhook ' . $data['id'], 'stripe');
+            return;
         }
 
         $invoice = $this->saveSubscriptionInvoice($stripeInvoice, $subscription);
