@@ -239,6 +239,11 @@ class PaymentIntentsElements {
           return;
         }
 
+        if(json.redirect && json.cart.isCompleted === true) {
+          window.location.href = json.redirect;
+          return;
+        }
+
         const completePaymentActionUrl = new URL(this.completePaymentActionUrl);
         completePaymentActionUrl.searchParams.append(
           'commerceTransactionHash',
