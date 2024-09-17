@@ -1,6 +1,6 @@
 # Release Notes for Stripe for Craft Commerce
 
-## Unreleased
+## 5.0.4.2 - 2024-09-17
 
 - Fixed a bug where free orders that completed immediately were not redirecting to the order success page.
 
