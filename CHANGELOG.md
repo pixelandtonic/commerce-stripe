@@ -1,5 +1,9 @@
 # Release Notes for Stripe for Craft Commerce
 
+## Unreleased
+
+- Fixed a bug where free orders that completed immediately were not redirecting to the order success page. ([#313](https://github.com/craftcms/commerce-stripe/issues/313))
+
 ## 4.1.5 - 2024-08-07
 
 - Fixed a bug the billing issues payment form did not display correctly for subscriptions.
